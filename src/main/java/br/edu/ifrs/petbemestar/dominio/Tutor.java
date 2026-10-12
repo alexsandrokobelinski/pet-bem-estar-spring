@@ -1,4 +1,3 @@
-
 package br.edu.ifrs.petbemestar.dominio;
 
 import jakarta.persistence.Entity;
