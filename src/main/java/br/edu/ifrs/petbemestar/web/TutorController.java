@@ -21,4 +21,10 @@ public class TutorController {
 	public List<Tutor> listar() {
 		return dao.listarTodos();
 	}
+
+	@GetMapping("/tutores/{id}")
+	public Tutor buscarPorId(@org.springframework.web.bind.annotation.PathVariable Long id) {
+		return dao.buscarPorId(id);
+	}
+
 }
