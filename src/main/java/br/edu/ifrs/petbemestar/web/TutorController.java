@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import br.edu.ifrs.petbemestar.dao.TutorDAO;
 import br.edu.ifrs.petbemestar.dominio.Tutor;
@@ -42,6 +43,12 @@ public class TutorController {
 	@PutMapping("/tutores/{id}")
 	public Tutor atualizar(@PathVariable Long id, @RequestBody Tutor dados) {
 		return dao.atualizar(id, dados);
+	}
+
+	@DeleteMapping("/tutores/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long id) {
+		dao.remover(id);
 	}
 
 }
