@@ -3,6 +3,8 @@ package br.edu.ifrs.petbemestar.dominio;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,6 +40,7 @@ public class Animal {
 	@Enumerated(EnumType.STRING)
 	private Porte porte;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "animal")
 	private List<Atendimento> atendimentos = new ArrayList<>();
 

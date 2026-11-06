@@ -3,6 +3,8 @@ package br.edu.ifrs.petbemestar.dominio;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +35,7 @@ public class Tutor {
 
 	// Não há cascade: a exclusão de um tutor com animais deve ser impedida
 	// pela integridade referencial do banco de dados.
+	@JsonIgnore
 	@OneToMany(mappedBy = "tutor")
 	private List<Animal> animais = new ArrayList<>();
 

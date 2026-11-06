@@ -2,6 +2,8 @@ package br.edu.ifrs.petbemestar.dominio;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,6 +35,7 @@ public class Atendimento {
 	@NotNull
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "animal_id", nullable = false)
+	@JsonIgnore
 	private Animal animal;
 
 	public Atendimento() {
