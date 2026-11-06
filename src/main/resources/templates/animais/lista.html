@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pet Bem-Estar - Animais</title>
+
+<link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+
+<body>
+
+	<main class="container">
+
+		<h1>Pet Bem-Estar</h1>
+
+		<p class="subtitulo">Gerenciamento de animais</p>
+
+		<!-- Mensagens de retorno -->
+		<div class="mensagem" th:if="${mensagem}" th:text="${mensagem}">
+		</div>
+
+		<div class="mensagens-erro" th:if="${erro}" th:text="${erro}"></div>
+
+		<!-- Navegação -->
+		<a th:href="@{/paginas/animais/novo}" class="botao"> + Novo animal
+		</a> <a th:href="@{/paginas/tutores}" class="botao"> Tutores </a>
+
+		<!-- Lista vazia -->
+		<div class="vazio" th:if="${#lists.isEmpty(animais)}">Nenhum
+			animal cadastrado.</div>
+
+		<!-- Tabela de animais -->
+		<table th:if="${not #lists.isEmpty(animais)}">
+
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Espécie</th>
+					<th>Porte</th>
+					<th>Tutor</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+
+			<tbody>
+
+				<tr th:each="animal : ${animais}">
+
+					<td th:text="${animal.nome}"></td>
+
+					<td th:text="${animal.especie}"></td>
+
+					<td th:text="${animal.porte}"></td>
+
+					<td th:text="${animal.tutor.nome}"></td>
+
+					<td>
+						<div class="acoes">
+
+							<a th:href="@{/paginas/animais/editar/{id}(id=${animal.id})}"
+								class="btn btn-editar"> Editar </a>
+
+							<form
+								th:action="@{/paginas/animais/excluir/{id}(id=${animal.id})}"
+								method="post"
+								onsubmit="return confirm('Deseja realmente excluir este animal?');">
+
+								<button type="submit" class="btn btn-excluir">Excluir</button>
+
+							</form>
+
+						</div>
+					</td>
+
+				</tr>
+
+			</tbody>
+
+		</table>
+
+	</main>
+
+</body>
+</html>

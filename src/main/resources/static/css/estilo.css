@@ -1,0 +1,274 @@
+/* =========================================================
+   PET BEM-ESTAR
+   Folha de estilos principal
+   ========================================================= */
+
+/* Configurações gerais */
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	padding: 30px;
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #f3f5f7;
+	color: #263238;
+}
+
+.container {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 30px;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+	margin-top: 0;
+	color: #174a6e;
+}
+
+.subtitulo {
+	color: #607d8b;
+	margin-bottom: 25px;
+}
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+.botao {
+	display: inline-block;
+	padding: 12px 20px;
+	background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+	color: #ffffff;
+	text-decoration: none;
+	font-weight: 600;
+	border: none;
+	border-radius: 9px;
+	cursor: pointer;
+	transition: opacity 0.2s ease;
+}
+
+.botao:hover {
+	opacity: 0.85;
+}
+
+.btn {
+	display: inline-block;
+	padding: 10px 16px;
+	border: none;
+	border-radius: 5px;
+	text-decoration: none;
+	font-size: 14px;
+	font-family: inherit;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.btn-principal {
+	background-color: #1769aa;
+	color: #fff;
+}
+
+.btn-principal:hover {
+	background-color: #0d4f85;
+}
+
+.btn-editar {
+	background-color: #f0ad4e;
+	color: #212121;
+}
+
+.btn-editar:hover {
+	background-color: #df982e;
+}
+
+.btn-excluir {
+	background-color: #c62828;
+	color: #fff;
+}
+
+.btn-excluir:hover {
+	background-color: #a51d1d;
+}
+
+.btn-secundario {
+	background-color: #e0e5e9;
+	color: #263238;
+}
+
+.btn-secundario:hover {
+	background-color: #cbd3d9;
+}
+
+/* =========================================================
+   TABELAS
+   ========================================================= */
+table {
+	width: 100%;
+	margin-top: 22px;
+	border-collapse: collapse;
+}
+
+th, td {
+	padding: 13px;
+	text-align: left;
+	border-bottom: 1px solid #dce2e6;
+}
+
+th {
+	background-color: #174a6e;
+	color: #fff;
+}
+
+tbody tr:hover {
+	background-color: #f1f7fb;
+}
+
+/* Ações nas tabelas */
+.acoes {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.acoes form {
+	margin: 0;
+}
+
+/* =========================================================
+   CAMPOS DOS FORMULÁRIOS
+   ========================================================= */
+.campo {
+	margin-bottom: 18px;
+}
+
+.campo label {
+	display: block;
+	margin-bottom: 7px;
+	font-weight: bold;
+}
+
+/* Campos de texto e listas de seleção */
+.campo input, .campo select {
+	width: 100%;
+	padding: 11px;
+	border: 1px solid #b0bec5;
+	border-radius: 5px;
+	font-size: 15px;
+	font-family: inherit;
+	background-color: #fff;
+	color: #263238;
+}
+
+/* Destaque ao selecionar um campo */
+.campo input:focus, .campo select:focus {
+	outline: 2px solid #90caf9;
+	border-color: #1769aa;
+}
+
+/* Texto auxiliar */
+.campo small {
+	display: block;
+	margin-top: 5px;
+	color: #607d8b;
+}
+
+/* Mensagens de erro junto aos campos */
+.erro-campo {
+	display: block;
+	margin-top: 5px;
+	color: #c62828;
+	font-size: 13px;
+}
+
+/* Botões dos formulários */
+.botoes-formulario {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 25px;
+}
+
+/* =========================================================
+   MENSAGENS DE VALIDAÇÃO E FEEDBACK
+   ========================================================= */
+
+/* Caixa geral de erros */
+.mensagens-erro {
+	margin-bottom: 20px;
+	padding: 12px 16px;
+	color: #842029;
+	background-color: #f8d7da;
+	border: 1px solid #f5c2c7;
+	border-radius: 5px;
+}
+
+.mensagens-erro p {
+	margin-top: 0;
+}
+
+.mensagens-erro ul {
+	margin-bottom: 0;
+	padding-left: 22px;
+}
+
+.mensagens-erro li {
+	margin-bottom: 5px;
+}
+
+/* Mensagem de sucesso */
+.mensagem {
+	margin-bottom: 20px;
+	padding: 12px 16px;
+	color: #155724;
+	background-color: #d4edda;
+	border: 1px solid #c3e6cb;
+	border-radius: 5px;
+}
+
+/* =========================================================
+   LISTAS VAZIAS
+   ========================================================= */
+.vazio {
+	margin-top: 22px;
+	padding: 25px;
+	text-align: center;
+	color: #607d8b;
+	background-color: #f7f9fa;
+	border-radius: 5px;
+}
+
+/* =========================================================
+   TELAS MENORES
+   ========================================================= */
+@media ( max-width : 700px) {
+	body {
+		padding: 12px;
+	}
+	.container {
+		padding: 16px;
+		overflow-x: auto;
+	}
+	h1 {
+		font-size: 24px;
+	}
+	table {
+		min-width: 650px;
+	}
+	.acoes {
+		flex-wrap: wrap;
+	}
+	.botao {
+		margin-bottom: 8px;
+	}
+	.botoes-formulario {
+		flex-direction: column;
+	}
+	.botoes-formulario .btn {
+		width: 100%;
+		text-align: center;
+	}
+}
