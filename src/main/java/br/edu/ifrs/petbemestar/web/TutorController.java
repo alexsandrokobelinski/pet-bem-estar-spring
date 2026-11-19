@@ -11,44 +11,61 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import br.edu.ifrs.petbemestar.dao.TutorDAO;
 import br.edu.ifrs.petbemestar.dominio.Tutor;
+import br.edu.ifrs.petbemestar.servico.TutorService;
 
 @RestController
 public class TutorController {
 
-	private final TutorDAO dao;
+	private final TutorService service;
 
-	public TutorController(TutorDAO dao) {
-		this.dao = dao;
+	public TutorController(TutorService service) {
+		this.service = service;
 	}
 
 	@GetMapping("/tutores")
 	public List<Tutor> listar() {
-		return dao.listarTodos();
+		return service.listarTodos();
 	}
 
 	@GetMapping("/tutores/{id}")
 	public Tutor buscarPorId(@PathVariable Long id) {
-		return dao.buscarPorId(id);
+		Tutor tutor = service.buscarPorId(id);
+
+		if (tutor == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor não encontrado.");
+		}
+
+		return tutor;
 	}
 
 	@PostMapping("/tutores")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Tutor cadastrar(@RequestBody Tutor tutor) {
-		return dao.salvar(tutor);
+		return service.salvar(tutor);
 	}
 
 	@PutMapping("/tutores/{id}")
 	public Tutor atualizar(@PathVariable Long id, @RequestBody Tutor dados) {
 
-		return dao.atualizar(id, dados);
+		Tutor tutor = service.atualizar(id, dados);
+
+		if (tutor == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor não encontrado.");
+		}
+
+		return tutor;
 	}
 
 	@DeleteMapping("/tutores/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long id) {
-		dao.remover(id);
+		if (service.buscarPorId(id) == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor não encontrado.");
+		}
+
+		service.remover(id);
 	}
 }

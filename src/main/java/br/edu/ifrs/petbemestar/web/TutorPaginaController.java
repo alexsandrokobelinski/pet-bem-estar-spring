@@ -10,23 +10,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.edu.ifrs.petbemestar.dao.TutorDAO;
 import br.edu.ifrs.petbemestar.dominio.Tutor;
+import br.edu.ifrs.petbemestar.servico.TutorService;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/paginas/tutores")
 public class TutorPaginaController {
 
-	private final TutorDAO dao;
+	private final TutorService service;
 
-	public TutorPaginaController(TutorDAO dao) {
-		this.dao = dao;
+	public TutorPaginaController(TutorService service) {
+		this.service = service;
 	}
 
 	@GetMapping
 	public String listar(Model model) {
-		model.addAttribute("tutores", dao.listarTodos());
+		model.addAttribute("tutores", service.listarTodos());
 		return "tutores/lista";
 	}
 
@@ -43,22 +43,19 @@ public class TutorPaginaController {
 			return "tutores/formulario";
 		}
 
-		dao.salvar(tutor);
-
+		service.salvar(tutor);
 		return "redirect:/paginas/tutores";
 	}
 
 	@GetMapping("/editar/{id}")
 	public String editar(@PathVariable Long id, Model model) {
-
-		Tutor tutor = dao.buscarPorId(id);
+		Tutor tutor = service.buscarPorId(id);
 
 		if (tutor == null) {
 			return "redirect:/paginas/tutores";
 		}
 
 		model.addAttribute("tutor", tutor);
-
 		return "tutores/formulario";
 	}
 
@@ -70,7 +67,9 @@ public class TutorPaginaController {
 			return "tutores/formulario";
 		}
 
-		dao.atualizar(id, tutor);
+		if (service.atualizar(id, tutor) == null) {
+			return "redirect:/paginas/tutores";
+		}
 
 		return "redirect:/paginas/tutores";
 	}
@@ -79,12 +78,15 @@ public class TutorPaginaController {
 	public String remover(@PathVariable Long id, RedirectAttributes atributos) {
 
 		try {
-			dao.remover(id);
-			atributos.addFlashAttribute("mensagem", "Tutor removido.");
-
+			if (service.buscarPorId(id) == null) {
+				atributos.addFlashAttribute("erro", "Tutor não encontrado.");
+			} else {
+				service.remover(id);
+				atributos.addFlashAttribute("mensagem", "Tutor removido.");
+			}
 		} catch (Exception e) {
 			atributos.addFlashAttribute("erro",
-					"Não foi possível remover o tutor. " + "Verifique se existem animais vinculados.");
+					"Não foi possível remover o tutor. Verifique se existem animais vinculados.");
 		}
 
 		return "redirect:/paginas/tutores";

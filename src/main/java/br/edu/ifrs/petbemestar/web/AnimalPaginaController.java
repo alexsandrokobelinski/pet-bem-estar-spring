@@ -10,158 +10,130 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.edu.ifrs.petbemestar.dao.AnimalDAO;
-import br.edu.ifrs.petbemestar.dao.AtendimentoDAO;
-import br.edu.ifrs.petbemestar.dao.TutorDAO;
 import br.edu.ifrs.petbemestar.dominio.Animal;
 import br.edu.ifrs.petbemestar.dominio.Especie;
 import br.edu.ifrs.petbemestar.dominio.Porte;
-import br.edu.ifrs.petbemestar.dominio.Tutor;
+import br.edu.ifrs.petbemestar.servico.AnimalService;
+import br.edu.ifrs.petbemestar.servico.RegraDeNegocioException;
+import br.edu.ifrs.petbemestar.servico.TutorService;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/paginas/animais")
 public class AnimalPaginaController {
 
-	private final AnimalDAO animalDAO;
-	private final TutorDAO tutorDAO;
-	private final AtendimentoDAO atendimentoDAO;
+    private final AnimalService animalService;
+    private final TutorService tutorService;
 
-	public AnimalPaginaController(AnimalDAO animalDAO, TutorDAO tutorDAO, AtendimentoDAO atendimentoDAO) {
+    public AnimalPaginaController(
+            AnimalService animalService,
+            TutorService tutorService) {
 
-		this.animalDAO = animalDAO;
-		this.tutorDAO = tutorDAO;
-		this.atendimentoDAO = atendimentoDAO;
-	}
+        this.animalService = animalService;
+        this.tutorService = tutorService;
+    }
 
-	private void carregarOpcoes(Model model) {
-		model.addAttribute("tutores", tutorDAO.listarTodos());
-		model.addAttribute("especies", Especie.values());
-		model.addAttribute("portes", Porte.values());
-	}
+    private void carregarOpcoes(Model model) {
+        model.addAttribute("tutores", tutorService.listarTodos());
+        model.addAttribute("especies", Especie.values());
+        model.addAttribute("portes", Porte.values());
+    }
 
-	/**
-	 * Verifica se o tutor informado existe no banco de dados.
-	 */
-	private boolean validarTutor(Animal animal, BindingResult resultado) {
+    @GetMapping
+    public String listar(Model model) {
+        model.addAttribute("animais", animalService.listarTodos());
+        return "animais/lista";
+    }
 
-		if (animal.getTutor() == null || animal.getTutor().getId() == null) {
-			resultado.rejectValue("tutor", "tutor.obrigatorio", "Selecione um tutor.");
-			return false;
-		}
+    @GetMapping("/novo")
+    public String novo(Model model) {
+        model.addAttribute("animal", new Animal());
+        carregarOpcoes(model);
+        return "animais/formulario";
+    }
 
-		Tutor tutor = tutorDAO.buscarPorId(animal.getTutor().getId());
+    @PostMapping("/novo")
+    public String cadastrar(
+            @Valid @ModelAttribute("animal") Animal animal,
+            BindingResult resultado,
+            Model model) {
 
-		if (tutor == null) {
-			resultado.rejectValue("tutor", "tutor.invalido", "O tutor selecionado não foi encontrado.");
-			return false;
-		}
+        if (resultado.hasErrors()) {
+            carregarOpcoes(model);
+            return "animais/formulario";
+        }
 
-		animal.setTutor(tutor);
-		return true;
-	}
+        try {
+            animalService.salvar(animal);
+            return "redirect:/paginas/animais";
+        } catch (RegraDeNegocioException e) {
+            resultado.rejectValue("tutor", "tutor.invalido", e.getMessage());
+            carregarOpcoes(model);
+            return "animais/formulario";
+        }
+    }
 
-	@GetMapping
-	public String listar(Model model) {
-		model.addAttribute("animais", animalDAO.listarTodos());
-		return "animais/lista";
-	}
+    @GetMapping("/editar/{id}")
+    public String editar(@PathVariable Long id, Model model) {
+        Animal animal = animalService.buscarPorId(id);
 
-	@GetMapping("/novo")
-	public String novo(Model model) {
-		model.addAttribute("animal", new Animal());
-		carregarOpcoes(model);
-		return "animais/formulario";
-	}
+        if (animal == null) {
+            return "redirect:/paginas/animais";
+        }
 
-	@PostMapping("/novo")
-	public String cadastrar(@Valid @ModelAttribute("animal") Animal animal, BindingResult resultado, Model model) {
+        model.addAttribute("animal", animal);
+        carregarOpcoes(model);
+        return "animais/formulario";
+    }
 
-		if (!resultado.hasErrors()) {
-			validarTutor(animal, resultado);
-		}
+    @PostMapping("/editar/{id}")
+    public String atualizar(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("animal") Animal animal,
+            BindingResult resultado,
+            Model model) {
 
-		if (resultado.hasErrors()) {
-			carregarOpcoes(model);
-			return "animais/formulario";
-		}
+        if (resultado.hasErrors()) {
+            carregarOpcoes(model);
+            return "animais/formulario";
+        }
 
-		animalDAO.salvar(animal);
+        animal.setId(id);
 
-		return "redirect:/paginas/animais";
-	}
+        try {
+            Animal atualizado = animalService.atualizar(id, animal);
 
-	@GetMapping("/editar/{id}")
-	public String editar(@PathVariable Long id, Model model) {
+            if (atualizado == null) {
+                return "redirect:/paginas/animais";
+            }
 
-		Animal animal = animalDAO.buscarPorId(id);
+            return "redirect:/paginas/animais";
+        } catch (RegraDeNegocioException e) {
+            resultado.rejectValue("tutor", "tutor.invalido", e.getMessage());
+            carregarOpcoes(model);
+            return "animais/formulario";
+        }
+    }
 
-		if (animal == null) {
-			return "redirect:/paginas/animais";
-		}
+    @PostMapping("/excluir/{id}")
+    public String remover(
+            @PathVariable Long id,
+            RedirectAttributes atributos) {
 
-		model.addAttribute("animal", animal);
-		carregarOpcoes(model);
+        try {
+            if (animalService.remover(id)) {
+                atributos.addFlashAttribute("mensagem", "Animal excluído com sucesso.");
+            } else {
+                atributos.addFlashAttribute("erro", "Animal não encontrado.");
+            }
+        } catch (RegraDeNegocioException e) {
+            atributos.addFlashAttribute("erro", e.getMessage());
+        } catch (Exception e) {
+            atributos.addFlashAttribute(
+                    "erro",
+                    "Não foi possível excluir o animal. Verifique os registros vinculados.");
+        }
 
-		return "animais/formulario";
-	}
-
-	@PostMapping("/editar/{id}")
-	public String atualizar(@PathVariable Long id, @Valid @ModelAttribute("animal") Animal animal,
-			BindingResult resultado, Model model) {
-
-		Animal existente = animalDAO.buscarPorId(id);
-
-		if (existente == null) {
-			return "redirect:/paginas/animais";
-		}
-
-		if (!resultado.hasErrors()) {
-			validarTutor(animal, resultado);
-		}
-
-		if (resultado.hasErrors()) {
-			carregarOpcoes(model);
-			return "animais/formulario";
-		}
-
-		// O ID da URL prevalece sobre o ID enviado pelo formulário.
-		animal.setId(id);
-
-		animalDAO.atualizar(id, animal);
-
-		return "redirect:/paginas/animais";
-	}
-
-	/**
-	 * Exclui um animal somente quando não possui atendimentos.
-	 */
-	@PostMapping("/excluir/{id}")
-	public String remover(@PathVariable Long id, RedirectAttributes atributos) {
-
-		Animal animal = animalDAO.buscarPorId(id);
-
-		if (animal == null) {
-			atributos.addFlashAttribute("erro", "Animal não encontrado.");
-			return "redirect:/paginas/animais";
-		}
-
-		if (!atendimentoDAO.listarPorAnimal(id).isEmpty()) {
-			atributos.addFlashAttribute("erro",
-					"Não é possível excluir este animal, pois existem atendimentos vinculados.");
-			return "redirect:/paginas/animais";
-		}
-
-		try {
-			animalDAO.remover(id);
-
-			atributos.addFlashAttribute("mensagem", "Animal excluído com sucesso.");
-
-		} catch (Exception e) {
-			atributos.addFlashAttribute("erro",
-					"Não foi possível excluir o animal. Verifique os registros vinculados.");
-		}
-
-		return "redirect:/paginas/animais";
-	}
+        return "redirect:/paginas/animais";
+    }
 }
