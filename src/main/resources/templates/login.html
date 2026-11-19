@@ -7,7 +7,8 @@
 <link rel="stylesheet" th:href="@{/css/estilo.css}">
 </head>
 <body>
-	<main class="container">
+	<div th:replace="~{fragments/cabecalho :: cabecalho}"></div>
+	<main class="container container-autenticacao">
 		<h1>Pet Bem-Estar</h1>
 		<p class="subtitulo">Acesse sua conta</p>
 

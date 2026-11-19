@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<body>
+	<header class="cabecalho" th:fragment="cabecalho">
+		<div class="cabecalho-conteudo">
+			<a class="marca"
+				th:href="${session.usuarioLogado != null ? '/paginas/tutores' : '/login'}"
+				aria-label="Pet Bem-Estar, página inicial"> <img
+				th:src="@{/img/logo-pet-bem-estar.jpg}"
+				alt="Pet Bem-Estar, banho, tosa e veterinária">
+			</a>
+
+			<nav class="navegacao" aria-label="Navegação principal"
+				th:if="${session.usuarioLogado != null}">
+				<a th:href="@{/paginas/tutores}">Tutores</a> <a
+					th:href="@{/paginas/animais}">Animais</a> <span
+					class="usuario-sessao">Olá, <strong
+					th:text="${session.usuarioLogado}">Usuário</strong></span> <a
+					class="link-sair" th:href="@{/sair}">Sair</a>
+			</nav>
+
+			<nav class="navegacao navegacao-publica" aria-label="Acesso"
+				th:if="${session.usuarioLogado == null}">
+				<a th:href="@{/login}">Entrar</a> <a class="link-cadastro"
+					th:href="@{/cadastro}">Criar conta</a>
+			</nav>
+		</div>
+	</header>
+</body>
+</html>
