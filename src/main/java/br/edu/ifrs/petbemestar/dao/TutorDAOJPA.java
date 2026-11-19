@@ -49,11 +49,26 @@ public class TutorDAOJPA implements TutorDAO {
 
 	@Override
 	public boolean possuiAnimais(Long idTutor) {
-		Long quantidade = em.createQuery(
-				"SELECT COUNT(a) FROM Animal a WHERE a.tutor.id = :idTutor",
-				Long.class)
-				.setParameter("idTutor", idTutor)
-				.getSingleResult();
+		Long quantidade = em.createQuery("SELECT COUNT(a) FROM Animal a WHERE a.tutor.id = :idTutor", Long.class)
+				.setParameter("idTutor", idTutor).getSingleResult();
+
+		return quantidade > 0;
+	}
+
+	@Override
+	public boolean existeTelefone(String telefone) {
+		Long quantidade = em.createQuery("SELECT COUNT(t) FROM Tutor t WHERE t.telefone = :telefone", Long.class)
+				.setParameter("telefone", telefone).getSingleResult();
+
+		return quantidade > 0;
+	}
+
+	@Override
+	public boolean existeTelefoneParaOutroTutor(String telefone, Long idTutor) {
+		Long quantidade = em
+				.createQuery("SELECT COUNT(t) FROM Tutor t WHERE t.telefone = :telefone AND t.id <> :idTutor",
+						Long.class)
+				.setParameter("telefone", telefone).setParameter("idTutor", idTutor).getSingleResult();
 
 		return quantidade > 0;
 	}

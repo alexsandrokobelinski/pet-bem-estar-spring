@@ -25,11 +25,30 @@ public class TutorService {
 	}
 
 	public Tutor salvar(Tutor tutor) {
+		validarTelefone(tutor, null);
 		return dao.salvar(tutor);
 	}
 
 	public Tutor atualizar(Long id, Tutor tutor) {
+		if (dao.buscarPorId(id) == null) {
+			return null;
+		}
+
+		validarTelefone(tutor, id);
 		return dao.atualizar(id, tutor);
+	}
+
+	private void validarTelefone(Tutor tutor, Long idTutor) {
+		String telefone = tutor.getTelefone().trim();
+		tutor.setTelefone(telefone);
+
+		boolean telefoneEmUso = idTutor == null ? dao.existeTelefone(telefone)
+				: dao.existeTelefoneParaOutroTutor(telefone, idTutor);
+
+		if (telefoneEmUso) {
+			throw new RegraDeNegocioException(
+					"Este telefone já está cadastrado para outro cliente. Informe um telefone diferente.");
+		}
 	}
 
 	public void remover(Long id) {

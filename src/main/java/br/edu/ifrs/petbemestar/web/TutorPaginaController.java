@@ -38,14 +38,18 @@ public class TutorPaginaController {
 	}
 
 	@PostMapping("/novo")
-	public String cadastrar(@Valid @ModelAttribute("tutor") Tutor tutor, BindingResult resultado) {
-
+	public String cadastrar(@Valid @ModelAttribute("tutor") Tutor tutor, BindingResult resultado, Model model) {
 		if (resultado.hasErrors()) {
 			return "tutores/formulario";
 		}
 
-		service.salvar(tutor);
-		return "redirect:/paginas/tutores";
+		try {
+			service.salvar(tutor);
+			return "redirect:/paginas/tutores";
+		} catch (RegraDeNegocioException e) {
+			model.addAttribute("erro", e.getMessage());
+			return "tutores/formulario";
+		}
 	}
 
 	@GetMapping("/editar/{id}")
@@ -61,23 +65,25 @@ public class TutorPaginaController {
 	}
 
 	@PostMapping("/editar/{id}")
-	public String atualizar(@PathVariable Long id, @Valid @ModelAttribute("tutor") Tutor tutor,
-			BindingResult resultado) {
-
+	public String atualizar(@PathVariable Long id, @Valid @ModelAttribute("tutor") Tutor tutor, BindingResult resultado,
+			Model model) {
 		if (resultado.hasErrors()) {
 			return "tutores/formulario";
 		}
 
-		if (service.atualizar(id, tutor) == null) {
+		try {
+			if (service.atualizar(id, tutor) == null) {
+				return "redirect:/paginas/tutores";
+			}
 			return "redirect:/paginas/tutores";
+		} catch (RegraDeNegocioException e) {
+			model.addAttribute("erro", e.getMessage());
+			return "tutores/formulario";
 		}
-
-		return "redirect:/paginas/tutores";
 	}
 
 	@PostMapping("/excluir/{id}")
 	public String remover(@PathVariable Long id, RedirectAttributes atributos) {
-
 		try {
 			service.remover(id);
 			atributos.addFlashAttribute("mensagem", "Tutor removido com sucesso.");

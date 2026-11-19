@@ -45,19 +45,26 @@ public class TutorController {
 	@PostMapping("/tutores")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Tutor cadastrar(@RequestBody Tutor tutor) {
-		return service.salvar(tutor);
+		try {
+			return service.salvar(tutor);
+		} catch (RegraDeNegocioException e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+		}
 	}
 
 	@PutMapping("/tutores/{id}")
 	public Tutor atualizar(@PathVariable Long id, @RequestBody Tutor dados) {
+		try {
+			Tutor tutor = service.atualizar(id, dados);
 
-		Tutor tutor = service.atualizar(id, dados);
+			if (tutor == null) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor não encontrado.");
+			}
 
-		if (tutor == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor não encontrado.");
+			return tutor;
+		} catch (RegraDeNegocioException e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 		}
-
-		return tutor;
 	}
 
 	@DeleteMapping("/tutores/{id}")

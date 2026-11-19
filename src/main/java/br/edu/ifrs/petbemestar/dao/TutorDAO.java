@@ -14,5 +14,9 @@ public interface TutorDAO {
 
 	boolean possuiAnimais(Long idTutor);
 
+	boolean existeTelefone(String telefone);
+
+	boolean existeTelefoneParaOutroTutor(String telefone, Long idTutor);
+
 	void remover(Long id);
 }

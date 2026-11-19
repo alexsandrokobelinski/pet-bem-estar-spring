@@ -21,6 +21,11 @@
 			th:action="${tutor.id == null ? '/paginas/tutores/novo' : '/paginas/tutores/editar/' + tutor.id}"
 			method="post">
 
+			<!-- Mensagem de regra de negócio, como telefone duplicado -->
+			<div class="mensagens-erro" th:if="${erro}" role="alert">
+				<p th:text="${erro}">Mensagem de erro</p>
+			</div>
+
 			<!-- Identificador utilizado na edição -->
 			<input type="hidden" th:field="*{id}">
 
