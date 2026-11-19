@@ -272,3 +272,26 @@ tbody tr:hover {
 		text-align: center;
 	}
 }
+
+/* Identificação da sessão e saída */
+.sessao-info {
+	max-width: 1100px;
+	margin: 0 auto 14px auto;
+	padding: 10px 16px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 12px;
+	color: #263238;
+	font-size: 14px;
+}
+
+.sessao-info a {
+	color: #1769aa;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.sessao-info a:hover {
+	text-decoration: underline;
+}

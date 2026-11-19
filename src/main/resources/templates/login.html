@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pet Bem-Estar - Login</title>
+<link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+<body>
+	<main class="container">
+		<h1>Pet Bem-Estar</h1>
+		<p class="subtitulo">Acesse sua conta</p>
+
+		<div class="mensagem" th:if="${mensagem}" th:text="${mensagem}"
+			role="status"></div>
+		<div class="mensagens-erro" th:if="${erro}" th:text="${erro}"
+			role="alert"></div>
+
+		<form th:action="@{/login}" method="post">
+			<div class="campo">
+				<label for="email">E-mail:</label> <input type="email" id="email"
+					name="email" th:value="${email}" required maxlength="150"
+					autocomplete="username">
+			</div>
+			<div class="campo">
+				<label for="senha">Senha:</label> <input type="password" id="senha"
+					name="senha" required autocomplete="current-password">
+			</div>
+			<div class="botoes-formulario">
+				<button type="submit" class="btn btn-principal">Entrar</button>
+				<a th:href="@{/cadastro}" class="btn btn-secundario">Criar conta</a>
+			</div>
+		</form>
+	</main>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pet Bem-Estar - Cadastro de usuário</title>
+<link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+<body>
+	<main class="container">
+		<h1>Pet Bem-Estar</h1>
+		<p class="subtitulo">Crie seu usuário de acesso</p>
+
+		<div class="mensagens-erro" th:if="${erro}" th:text="${erro}"
+			role="alert"></div>
+
+		<form th:action="@{/cadastro}" method="post">
+			<div class="campo">
+				<label for="nome">Nome:</label> <input type="text" id="nome"
+					name="nome" th:value="${nome}" required maxlength="120"
+					autocomplete="name">
+			</div>
+			<div class="campo">
+				<label for="email">E-mail:</label> <input type="email" id="email"
+					name="email" th:value="${email}" required maxlength="150"
+					autocomplete="email">
+			</div>
+			<div class="campo">
+				<label for="senha">Senha:</label> <input type="password" id="senha"
+					name="senha" required minlength="6" autocomplete="new-password">
+				<small>A senha deve possuir pelo menos 6 caracteres.</small>
+			</div>
+			<div class="campo">
+				<label for="confirmarSenha">Confirme a senha:</label> <input
+					type="password" id="confirmarSenha" name="confirmarSenha" required
+					minlength="6" autocomplete="new-password">
+			</div>
+			<div class="botoes-formulario">
+				<button type="submit" class="btn btn-principal">Cadastrar</button>
+				<a th:href="@{/login}" class="btn btn-secundario">Voltar ao
+					login</a>
+			</div>
+		</form>
+	</main>
+</body>
+</html>

@@ -11,6 +11,11 @@
 </head>
 
 <body>
+	<div class="sessao-info" th:if="${session.usuarioLogado != null}">
+		Olá, <strong th:text="${session.usuarioLogado}">Usuário</strong> <a
+			th:href="@{/sair}">Sair</a>
+	</div>
+
 
 	<main class="container">
 

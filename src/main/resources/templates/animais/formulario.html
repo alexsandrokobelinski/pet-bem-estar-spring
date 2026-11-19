@@ -7,6 +7,11 @@
 <link rel="stylesheet" th:href="@{/css/estilo.css}">
 </head>
 <body>
+	<div class="sessao-info" th:if="${session.usuarioLogado != null}">
+		Olá, <strong th:text="${session.usuarioLogado}">Usuário</strong> <a
+			th:href="@{/sair}">Sair</a>
+	</div>
+
 	<main class="container">
 		<h1
 			th:text="${animal.id == null ? 'Cadastrar Animal' : 'Editar Animal'}">Cadastro
