@@ -33,6 +33,15 @@ public class TutorService {
 	}
 
 	public void remover(Long id) {
+		if (dao.buscarPorId(id) == null) {
+			throw new RegraDeNegocioException("Tutor não encontrado.");
+		}
+
+		if (dao.possuiAnimais(id)) {
+			throw new RegraDeNegocioException(
+					"Não é possível excluir este cliente porque existem animais cadastrados em seu nome.");
+		}
+
 		dao.remover(id);
 	}
 }

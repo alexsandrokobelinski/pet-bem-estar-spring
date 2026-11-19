@@ -48,6 +48,17 @@ public class TutorDAOJPA implements TutorDAO {
 	}
 
 	@Override
+	public boolean possuiAnimais(Long idTutor) {
+		Long quantidade = em.createQuery(
+				"SELECT COUNT(a) FROM Animal a WHERE a.tutor.id = :idTutor",
+				Long.class)
+				.setParameter("idTutor", idTutor)
+				.getSingleResult();
+
+		return quantidade > 0;
+	}
+
+	@Override
 	public void remover(Long id) {
 		Tutor tutor = em.find(Tutor.class, id);
 

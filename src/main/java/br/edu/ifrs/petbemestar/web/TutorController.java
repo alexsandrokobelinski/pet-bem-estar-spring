@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.edu.ifrs.petbemestar.dominio.Tutor;
+import br.edu.ifrs.petbemestar.servico.RegraDeNegocioException;
 import br.edu.ifrs.petbemestar.servico.TutorService;
 
 @RestController
@@ -62,10 +63,12 @@ public class TutorController {
 	@DeleteMapping("/tutores/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long id) {
-		if (service.buscarPorId(id) == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor não encontrado.");
+		try {
+			service.remover(id);
+		} catch (RegraDeNegocioException e) {
+			HttpStatus status = "Tutor não encontrado.".equals(e.getMessage()) ? HttpStatus.NOT_FOUND
+					: HttpStatus.CONFLICT;
+			throw new ResponseStatusException(status, e.getMessage());
 		}
-
-		service.remover(id);
 	}
 }

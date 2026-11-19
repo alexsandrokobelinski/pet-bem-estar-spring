@@ -12,5 +12,7 @@ public interface TutorDAO {
 
 	Tutor atualizar(Long id, Tutor tutor);
 
+	boolean possuiAnimais(Long idTutor);
+
 	void remover(Long id);
 }
