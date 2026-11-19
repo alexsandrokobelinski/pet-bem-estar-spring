@@ -10,6 +10,8 @@ public interface AnimalDAO {
 
 	List<Animal> listarTodos();
 
+	List<Animal> listarPorTutor(Long idTutor);
+
 	Animal atualizar(Long id, Animal animal);
 
 	void remover(Long id);

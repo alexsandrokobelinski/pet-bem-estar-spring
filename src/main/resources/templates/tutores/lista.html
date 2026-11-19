@@ -19,7 +19,7 @@
         <thead><tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Ações</th></tr></thead>
         <tbody>
         <tr th:each="tutor : ${tutores}">
-            <td th:text="${tutor.nome}"></td><td th:text="${tutor.telefone}"></td><td th:text="${tutor.email}"></td>
+            <td><a th:href="@{/paginas/tutores/detalhes/{id}(id=${tutor.id})}" th:text="${tutor.nome}"></a></td><td th:text="${tutor.telefone}"></td><td th:text="${tutor.email}"></td>
             <td><div class="acoes">
                 <a th:href="@{/paginas/tutores/editar/{id}(id=${tutor.id})}" class="btn btn-editar">Editar</a>
                 <form th:action="@{/paginas/tutores/excluir/{id}(id=${tutor.id})}" method="post"

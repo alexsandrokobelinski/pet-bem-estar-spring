@@ -30,6 +30,12 @@ public class AnimalDAOJPA implements AnimalDAO {
 	}
 
 	@Override
+	public List<Animal> listarPorTutor(Long idTutor) {
+		return em.createQuery("SELECT a FROM Animal a WHERE a.tutor.id = :idTutor ORDER BY a.nome", Animal.class)
+				.setParameter("idTutor", idTutor).getResultList();
+	}
+
+	@Override
 	public Animal atualizar(Long id, Animal dados) {
 		Animal existente = em.find(Animal.class, id);
 		if (existente == null)

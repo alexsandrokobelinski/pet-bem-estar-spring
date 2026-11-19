@@ -28,6 +28,10 @@ public class AnimalService {
 		return dao.listarTodos();
 	}
 
+	public List<Animal> listarPorTutor(Long idTutor) {
+		return dao.listarPorTutor(idTutor);
+	}
+
 	public Animal buscarPorId(Long id) {
 		return dao.buscarPorId(id);
 	}

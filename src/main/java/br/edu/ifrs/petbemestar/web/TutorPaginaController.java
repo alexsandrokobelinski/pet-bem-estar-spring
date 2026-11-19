@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.edu.ifrs.petbemestar.dominio.Tutor;
+import br.edu.ifrs.petbemestar.servico.AnimalService;
 import br.edu.ifrs.petbemestar.servico.RegraDeNegocioException;
 import br.edu.ifrs.petbemestar.servico.TutorService;
 import jakarta.validation.Valid;
@@ -20,15 +21,30 @@ import jakarta.validation.Valid;
 public class TutorPaginaController {
 
 	private final TutorService service;
+	private final AnimalService animalService;
 
-	public TutorPaginaController(TutorService service) {
+	public TutorPaginaController(TutorService service, AnimalService animalService) {
 		this.service = service;
+		this.animalService = animalService;
 	}
 
 	@GetMapping
 	public String listar(Model model) {
 		model.addAttribute("tutores", service.listarTodos());
 		return "tutores/lista";
+	}
+
+	@GetMapping("/detalhes/{id}")
+	public String detalhes(@PathVariable Long id, Model model) {
+		Tutor tutor = service.buscarPorId(id);
+
+		if (tutor == null) {
+			return "redirect:/paginas/tutores";
+		}
+
+		model.addAttribute("tutor", tutor);
+		model.addAttribute("animais", animalService.listarPorTutor(id));
+		return "tutores/detalhes";
 	}
 
 	@GetMapping("/novo")
